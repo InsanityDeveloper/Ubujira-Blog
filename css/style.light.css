@@ -504,14 +504,16 @@ h6 {
 }
 .site-header .page-title {
   color: #1999ec;
+}
+text-color $theme-text-color {
   text-align: center;
   text-shadow: 1px 1px 2px #555;
 }
-.site-header .page-title.with-background-image {
+text-color $theme-text-color.with-background-image {
   color: #fff;
   padding: 3.125rem 0;
 }
-.site-header .page-title .title {
+text-color $theme-text-color .title {
   font-size: 2.25rem;
 }
 .site-menu {
