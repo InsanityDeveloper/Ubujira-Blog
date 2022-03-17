@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Ubujira">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Creating a private file server"/>
+  <meta property="og:description" content="Hello! I&#39;m a furry and developer! I have for some reason decided to start a blog." />
+  <meta property="og:site_name" content="Ubujira"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="https://blog.ubujira.dev"/>
+  
+    <link rel="alternate" href="/atom.xml" title="Ubujira" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>Ubujira</title>
+
+  <!-- Bootstrap CSS -->
+  
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+  <!-- Custom CSS -->
+  
+  
+<link rel="stylesheet" href="/css/style.dark.css">
+
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Creating a private file server</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a target="_blank" rel="noopener" href="https://github.com/InsanityDeveloper">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:ubujira@ubujira.dev">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Ubujira</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2022-03-02</span>
+            <span class="time">14:47:19</span>
+          </span>
+          
+          <!--  Categories  -->
+            <span class="categories info">Under 
+
+<a href="/categories/Homeserver/">Homeserver</a>
+</span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/samba/">#samba</a> <a class="tag" href="/tags/smb/">#smb</a> <a class="tag" href="/tags/file-server/">#file server</a> <a class="tag" href="/tags/file-sharing/">#file sharing</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>For my project, i’m making a Homeserver.</p>
+<p>One of my first thoughts was making a file server for me and my friends, so that we can share files to each other and also make listening to local Spotify music files way less annoying.</p>
+<p>The most common protocol for a file server is SMB (<em>Server Message Block</em>), so I decided to go with that. The most used implementation for that protocol is <strong><a target="_blank" rel="noopener" href="https://www.samba.org/">Samba</a></strong>, an open-source project since 1992, with the goal of providing seamless integration of the SMB protocol.</p>
+<p>To setup Samba, I used <a target="_blank" rel="noopener" href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-samba-share-for-a-small-organization-on-ubuntu-16-04">DigitalOceans Samba Setup Guide</a> as I have never before used Samba. </p>
+<h1 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h1><p>First you have to install Samba with <strong>apt</strong>.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install samba</span><br></pre></td></tr></table></figure>
+
+<p>As I don’t require Samba NetBIOS, I also disabled it.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl stop nmbd.service</span><br><span class="line">sudo systemctl disable nmbd.service</span><br></pre></td></tr></table></figure>
+
+<p>Then next, I stopped the Samba SMB Server itself, so I can start configuring it.</p>
+<p><code>sudo systemctl stop smbd.service</code></p>
+<h1 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h1><p>The Samba configuration file is located at <code>/etc/samba/smbd.conf</code>.</p>
+<p>To make creating shares way easier, I wrote a script to automate it.<br>You give it the username and then it will ask for the password.</p>
+<p><code>Usage: ./createNewUser.sh (Username)</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="keyword">if</span> [[ <span class="variable">$EUID</span> -ne 0 ]]; <span class="keyword">then</span></span><br><span class="line">   <span class="built_in">echo</span> <span class="string">&quot;This script must be run as root&quot;</span></span><br><span class="line">   <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$#</span>&quot;</span> -ne 1 ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;Usage: <span class="variable">$0</span> (Username)&quot;</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">sudo <span class="built_in">mkdir</span> /samba/<span class="variable">$1</span></span><br><span class="line">sudo adduser --force-badname --home /samba/<span class="variable">$1</span> --no-create-home --shell /usr/sbin/nologin --ingroup sambashare <span class="variable">$1</span></span><br><span class="line">sudo <span class="built_in">chown</span> <span class="variable">$1</span>:sambashare /samba/<span class="variable">$1</span>/</span><br><span class="line">sudo <span class="built_in">chmod</span> 2770 /samba/<span class="variable">$1</span>/</span><br><span class="line"></span><br><span class="line">sudo smbpasswd -a <span class="variable">$1</span></span><br><span class="line">sudo smbpasswd -e <span class="variable">$1</span></span><br><span class="line"></span><br><span class="line">SHARE_BLOCK=<span class="string">&quot;[<span class="variable">$1</span>]\npath = /samba/<span class="variable">$1</span>\nbrowseable = no\nread only = no\nforce create mode = 0660\nforce directory mode = 2770\nvalid users = <span class="variable">$1</span> @admins\n&quot;</span></span><br><span class="line"></span><br><span class="line">sudo <span class="built_in">echo</span> -e <span class="variable">$SHARE_BLOCK</span> &gt;&gt; /etc/samba/smb.conf</span><br><span class="line"></span><br><span class="line">sudo systemctl restart smbd</span><br></pre></td></tr></table></figure>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+
+<script src="/js/highlight.pack.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="Ubujira">
   <!-- Open Graph Data -->
-  <meta property="og:title" content="Setting up the screenshot server"/>
+  <meta property="og:title" content="Creating a blog"/>
   <meta property="og:description" content="Hello! I&#39;m a furry and developer! I have for some reason decided to start a blog." />
   <meta property="og:site_name" content="Ubujira"/>
   <meta property="og:type" content="article" />
@@ -44,7 +44,7 @@
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
         <div class="page-title with-background-image">
-          <p class="title">Setting up the screenshot server</p>
+          <p class="title">Creating a blog</p>
           <p class="subtitle"></p>
         </div>
         <div class="site-menu with-background-image">
@@ -100,7 +100,7 @@
           
           <!-- Date -->
           <span class="date-time info">On
-            <span class="date">2022-03-02</span>
+            <span class="date">2022-03-17</span>
             <span class="time">14:47:19</span>
           </span>
           
@@ -116,20 +116,23 @@
           <div class="post-tags text-muted">
             Tags: 
 
-<a class="tag" href="/tags/screenshot/">#screenshot</a> <a class="tag" href="/tags/server/">#server</a> <a class="tag" href="/tags/xbackbone/">#xbackbone</a>
+<a class="tag" href="/tags/blog/">#blog</a>
 
 
           </div>
         
         <!-- Post Main Content -->
         <div class="post-content">
-          <p>I wanted to add another useful service to my homserver, which i decided was going to be a Screenshot-Server.</p>
-<p>Something i prioritized was that it had ShareX integration and a dashboard.</p>
-<p>On GitHub, I found XBackBone, something which seemed to be perfect for this. </p>
-<h1 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h1><p>I made a new directory inside <code>/var/www/html/cdn.ubujira.dev</code>, and then downloaded the latest release of XBackBone with <code>wget https://github.com/SergiX44/XBackBone/releases/download/3.5.1/release-v3.5.1.zip</code>.</p>
-<p>Then unzip the zip file with <code>unzip release-v3.5.1.zip</code>.</p>
-<p>After this setup a new nginx site with <a target="_blank" rel="noopener" href="https://github.com/SergiX44/XBackBone/blob/master/nginx.conf">this</a> as the basis of it.</p>
-<p>After doing that visit <code>https://DOMAIN.TLD/install</code> and install it.</p>
+          <p>I wanted to start writing a blog as part of my Homeserver, so I had to find a suitable blogging system, which i can implement easily and start writing.</p>
+<p>I with some googling found Hexo and it seemed pretty much perfect for the task.</p>
+<h1 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h1><p>To install Hexo, you first require NPM to be installed.<br>After that you can install Hexo with the command <code>npm install hexo</code>.</p>
+<p>Then use the command <code>hexo init (Directory)</code> to initialize a blog.</p>
+<p>After that you’ll want to edit the _config.yml and edit the values to how you want them. <a target="_blank" rel="noopener" href="https://hexo.io/docs/configuration">Configuration options</a>.</p>
+<p>After that I made it integrate with Git and with Git made it automatically serve the static pages on my nginx webserver.</p>
+<h1 id="Adding-an-admin-panel"><a href="#Adding-an-admin-panel" class="headerlink" title="Adding an admin panel"></a>Adding an admin panel</h1><p>For the admin panel, I found <a target="_blank" rel="noopener" href="https://github.com/jaredly/hexo-admin">hexo-admin</a>.</p>
+<p>To install it, run <code>npm install --save hexo-admin</code>.</p>
+<p>Then to access the admin panel run <code>hexo server -d</code>.<br>Make sure to setup a password on at the minimum on the Server itself and if possible, do it on the nginx site itself on a seperate domain using a reverse proxy.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/jaredly/hexo-admin#local-use-vs-deployment">Additional infos</a><br/><br><a target="_blank" rel="noopener" href="https://github.com/jaredly/hexo-admin#4-password-protection">Password setup</a></p>
 
         </div>
       </div>
